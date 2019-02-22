@@ -2,7 +2,7 @@
 
 ## Developer setup and running tests
 
-Requires Pyhton 3.7
+Requires Python 3.7
 
 ```bash
 virtualenv -p python3.7 venv
