@@ -6,7 +6,7 @@ EMPTY = ' '
 PLAYER_1 = 'x'
 PLAYER_2 = 'o'
 
-@dataclass
+@dataclass(frozen=True)
 class EndState:
   '''
   A possible end state of a game.
@@ -19,7 +19,7 @@ class EndState:
   is_over: bool = False
   score: int = 0  # may be +/-1 if the game is over and one player wins
 
-@dataclass
+@dataclass(frozen=True)
 class Move:
   '''A description of a TicTacToe move.'''
   player: str = PLAYER_1
@@ -46,7 +46,7 @@ class TicTacToeState:
     else:
       self.board = initial_state.copy()
 
-  @classmethod
+  @staticmethod
   def starting_board():
     return TicTacToeState()
 
@@ -73,6 +73,9 @@ class TicTacToeState:
       return PLAYER_1
     else:
       return PLAYER_2
+
+  def __getitem__(self, position):
+    return self.board[position]
 
   def tic_tac_toe(self):
     '''Returns winning player if tic tac toe, none if no winner.'''
@@ -103,4 +106,26 @@ class TicTacToeState:
           moves.append(move)
     return moves
 
+  def __str__(self):
+    return '''{}{}{}
+    {}{}{}
+    {}{}{}'''.format(*self.board)
 
+  @classmethod
+  def parse(self, str):
+    pass
+
+
+def tic_tac_toe_reward(state, end_state):
+    """
+    Need a way to say: given a State S and an EndState E, such that E was reached while exploring S,
+    what is the reward that should be given to S.
+    """
+    if state.players_turn() == PLAYER_1:
+       return end_state.score
+    elif state.players_turn() == PLAYER_2:
+       return -end_state.score
+
+
+def starting_board():
+  return TicTacToeState.starting_board()
